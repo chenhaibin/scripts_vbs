@@ -1,0 +1,22 @@
+[decimal]$ColumnA = 0
+[decimal]$ColumnB = 0
+get-content C:\users\matth\desktop\notrailers.txt -readcount 1 -totalcount 400064 | Where{$_ -notmatch "TRAILER$" } | Foreach-Object{
+ $TestString = $_.substring(415,8)
+ $CurrentLine = $_
+ If ($TestString -inotmatch "[a-z]")
+ {
+  try
+  {
+   $ColumnA = [decimal]$_.substring(850,14) + $ColumnA
+   $ColumnB = [decimal]$_.substring(910,14) + $ColumnB
+   $_ >> C:\users\matth\desktop\Filtered.txt
+  }
+  catch
+  {
+   $CurrentLine
+   $CurrentLine >> C:\users\matth\desktop\errorline.txt
+  }
+ }
+}
+$ColumnA
+$ColumnB

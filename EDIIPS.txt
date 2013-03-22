@@ -1,0 +1,24 @@
+[decimal]$ColumnA = 0
+[decimal]$ColumnB = 0
+get-content .\sourcefiltered.txt -readcount 1 | Foreach-Object{
+	$TestString = $_.substring(415,8)
+	$CurrentLine = $_
+	If ($TestString -inotmatch "[a-z]")
+	{
+		try
+		{
+			$ColumnA = [decimal]$_.substring(850,14) + $ColumnA
+			$ColumnB = [decimal]$_.substring(910,14) + $ColumnB
+			$_ >> .\Filtered.txt
+		}
+		catch
+		{
+			$CurrentLine
+			$_
+			$CurrentLine >> .\errorline.txt
+			$_ >> .\errorline.txt
+		}
+	}
+}
+$ColumnA
+$ColumnB
